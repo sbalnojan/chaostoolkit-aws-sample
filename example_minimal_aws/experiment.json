@@ -1,0 +1,45 @@
+{
+  "configuration": {
+    "aws_region": "eu-central-1"
+  },
+  "version": "1.0.0",
+  "title": "Check if instance is there.",
+  "description": "Check for instance of specific instance id",
+  "tags": ["foo"],
+  "steady-state-hypothesis": {
+    "title": "Instance is there",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "instance-is-there",
+        "tolerance": true,
+        "provider": {
+          "type": "python",
+          "module": "chaosaws.ec2.probes",
+          "func": "instance_state",
+          "arguments": {
+            "instance_ids": ["i-0553503bb37abe82d"],
+            "state": "running"
+          }
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "stop-instance",
+      "provider": {
+        "type": "python",
+        "module": "chaosaws.ec2.actions",
+        "func": "stop_instance",
+        "arguments": {
+          "instance_id": "i-0553503bb37abe82d"
+        }
+      },
+      "pauses": {
+        "after": 10
+      }
+    }
+  ]
+}

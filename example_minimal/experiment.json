@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "title": "Check a file is there?",
+  "description": "Check for file",
+  "tags": ["foo"],
+  "steady-state-hypothesis": {
+    "title": "File is there",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "file-must-exist",
+        "tolerance": true,
+        "provider": {
+          "type": "python",
+          "module": "os.path",
+          "func": "exists",
+          "arguments": {
+            "path": "foo.bar"
+          }
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "file-be-gone",
+      "provider": {
+        "type": "python",
+        "module": "os.path",
+        "func": "exists",
+        "arguments": {
+          "path": "foo.bar"
+        }
+      },
+      "pauses": {
+        "after": 5
+      }
+    },
+    {
+      "ref": "file-must-exist"
+    }
+  ]
+}
