@@ -1,6 +1,6 @@
-# [WIP] Nuking AWS Things With Chaostoolkit to discover weaknesses.
+# [WIP] Chaos Engineering in Action! Nuking AWS Things With Chaostoolkit to make your production system more robust
 
-This is how a "weakness" looks.
+This is how a "weakness" looks like.
 
 ```
 $ chaos run experiment.json
@@ -43,3 +43,32 @@ What's still missing:
 - some terraform to set up an ecs fargate and
 - the chaostoolkit for that.
 - a proper list of probes and actions you can run (go through the code to find them...).
+
+## The chaostoolkit (-aws)
+
+The chaostoolkit is located at: https://chaostoolkit.org/
+the extension this is created with is here: https://github.com/chaostoolkit-incubator/chaostoolkit-aws
+
+The aws-kit has quite some actions & probes, for the following resource types.
+The probes & actions are not well documented, here is a list of some,
+for the rest you'll have to dig through the code.
+
+- ASG
+- Lambda
+- CloudWatch
+- EC2
+- - [Actions](https://github.com/chaostoolkit-incubator/chaostoolkit-aws/blob/master/chaosaws/ec2/actions.py)
+- - - stop_instance
+- - - detach_random_volume
+- - - terminate_instances
+- - - ...
+- - [Probes](https://github.com/chaostoolkit-incubator/chaostoolkit-aws/blob/master/chaosaws/ec2/probes.py)
+- - - count_instances
+- - - instance_staste
+- - - ...
+- ECS
+- EKS
+- ElastiCache
+- ELBV2
+- IAM
+- RDS
