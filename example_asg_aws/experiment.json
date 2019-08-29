@@ -1,0 +1,58 @@
+{
+  "configuration": {
+    "aws_region": "eu-central-1"
+  },
+  "version": "1.0.0",
+  "title": "Check if instance is there.",
+  "description": "Check for instance of specific instance id",
+  "tags": ["foo"],
+  "steady-state-hypothesis": {
+    "title": "Instance is there",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "instance-is-there",
+        "tolerance": true,
+        "provider": {
+          "type": "python",
+          "module": "chaosaws.asg.probes",
+          "func": "desired_equals_healthy",
+          "arguments": {
+            "asg_names": ["terraform-example-asg"]
+          }
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "stop-instance",
+      "provider": {
+        "type": "python",
+        "module": "chaosaws.asg.actions",
+        "func": "terminate_random_instances",
+        "arguments": {
+          "asg_names": ["terraform-example-asg"],
+          "instance_count": 1
+        }
+      },
+      "pauses": {
+        "after": 120
+      }
+    },
+    {
+      "type": "probe",
+      "name": "instance-is-there",
+      "tolerance": true,
+      "provider": {
+        "type": "python",
+        "module": "chaosaws.asg.probes",
+        "func": "desired_equals_healthy",
+        "arguments": {
+          "asg_names": ["terraform-example-asg"]
+        }
+      }
+    }
+  ]
+}

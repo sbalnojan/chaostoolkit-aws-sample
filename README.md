@@ -37,12 +37,36 @@ What you already have in here is:
 ```
 
 What's still missing:
+...
 
-- some terraform to set up an asg + ec2
-- the chaostoolkit for that
 - some terraform to set up an ecs fargate and
 - the chaostoolkit for that.
 - a proper list of probes and actions you can run (go through the code to find them...).
+
+## Nuking EC2 Instances
+
+You can check out example_asg_aws to see how to randomly nuke ec2 instances
+out of your asgs (and do some dummy validation):
+
+```
+$ make 2_run
+chaos run experiment.json
+[2019-08-29 21:25:14 INFO] Validating the experiment's syntax
+[2019-08-29 21:25:14 INFO] Experiment looks valid
+[2019-08-29 21:25:14 INFO] Running experiment: Check if instance is there.
+[2019-08-29 21:25:14 INFO] Steady state hypothesis: Instance is there
+[2019-08-29 21:25:14 INFO] Probe: instance-is-there
+[2019-08-29 21:25:14 INFO] Steady state hypothesis is met!
+[2019-08-29 21:25:14 INFO] Action: stop-instance
+[2019-08-29 21:25:15 INFO] Pausing after activity for 120s...
+[2019-08-29 21:27:15 INFO] Probe: instance-is-there
+[2019-08-29 21:27:15 INFO] Steady state hypothesis: Instance is there
+[2019-08-29 21:27:15 INFO] Probe: instance-is-there
+[2019-08-29 21:27:15 INFO] Steady state hypothesis is met!
+[2019-08-29 21:27:15 INFO] Let's rollback...
+[2019-08-29 21:27:15 INFO] No declared rollbacks, let's move on.
+[2019-08-29 21:27:15 INFO] Experiment ended with status: completed
+```
 
 ## The chaostoolkit (-aws)
 
