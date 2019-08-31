@@ -3,6 +3,27 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
+resource "aws_elb" "web-elb" {
+  name = "terraform-example-elb"
+
+  # The same availability zone as our instances
+  availability_zones   = ["eu-central-1b","eu-central-1c","eu-central-1a"]
+
+  listener {
+    instance_port     = 80
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
+  }
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 3
+    target              = "HTTP:80/"
+    interval            = 30
+  }
+}
 
 resource "aws_autoscaling_group" "web-asg" {
   availability_zones   = ["eu-central-1b","eu-central-1c","eu-central-1a"]
@@ -12,7 +33,7 @@ resource "aws_autoscaling_group" "web-asg" {
   desired_capacity     = "${var.asg_desired}"
   force_delete         = true
   launch_configuration = "${aws_launch_configuration.web-lc.name}"
-#  load_balancers       = ["${aws_elb.web-elb.name}"]
+  load_balancers       = ["${aws_elb.web-elb.name}"]
   vpc_zone_identifier  = ["${var.subnet_id}"]
 
   #vpc_zone_identifier = ["${split(",", var.availability_zones)}"]
